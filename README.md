@@ -1,0 +1,2 @@
+# Gamba
+Discord Bot
