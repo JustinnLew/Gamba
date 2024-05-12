@@ -9,7 +9,7 @@ def check_usr(data, usr):
     save(data)
 
 def save(data):
-    json_string = json.dumps(data)
+    json_string = json.dumps(data, indent=2)
     with open('data.json', 'w') as f:
         f.write(json_string)
 
