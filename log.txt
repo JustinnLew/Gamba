@@ -1,0 +1,34 @@
+------
+balance was used by ^-^ with resulting data {
+  "303097970629279745": {
+    "balance": 1402061.351279847
+  },
+  "941997472165818398": {
+    "balance": 701.3726619542142
+  }
+}
+balance(success) was used by ^-^ with resulting data {
+  "303097970629279745": {
+    "balance": 1402061.351279847
+  },
+  "941997472165818398": {
+    "balance": 701.3726619542142
+  }
+}
+------
+flip was used by ^-^ with resulting data {
+  "303097970629279745": {
+    "balance": 1402061.351279847
+  },
+  "941997472165818398": {
+    "balance": 701.3726619542142
+  }
+}
+flip(success) was used by ^-^ with resulting data {
+  "303097970629279745": {
+    "balance": 1402061.351279847
+  },
+  "941997472165818398": {
+    "balance": 358.63649026073574
+  }
+}
