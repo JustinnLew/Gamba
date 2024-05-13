@@ -8,7 +8,7 @@ from discord.ext import commands
 import pprint
 from data import save, load, check_usr, log
 from importlib import import_module
-from helper.util import balance_helper, poor_helper
+from helper.util import balance_helper, poor_helper, shutdown_helper, leaderboard_helper
 from helper.flip import flip_helper
 
 load_dotenv()
@@ -48,21 +48,11 @@ async def poor(ctx):
 
 @bot.command(help='Shutdown bot')
 async def shutdown(ctx):
-    if ctx.author.id != MAGIC_ID:
-        await ctx.send('You do not have permission to do that.')
-        return
-    save(data)
-    await ctx.send('Shutting down...')
-    await bot.close()
+    await shutdown_helper(ctx, bot, MAGIC_ID, data)
 
 @bot.command(help='leaderboard')
 async def leaderboard(ctx):
-    data = load()
-    leaderboard = sorted([(value['name'], value['balance']) for value in data.values()], key=lambda x: x[1], reverse=True)
-    embed = discord.Embed(title="Leaderboard", color=discord.Color.gold())
-    for i, (name, balance) in enumerate(leaderboard):
-        embed.add_field(value=f'{i+1}.  **{name}**: {balance:.2f}\n', name="\u200b", inline=False)
-    await ctx.send(embed=embed)
+    await leaderboard_helper(ctx, data)
 
 bot.run(os.getenv('TOKEN'))
 
