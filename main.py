@@ -34,9 +34,8 @@ async def on_ready():
     print('Ready!')
 
 @bot.command(help='50/50')
-async def flip(ctx):
-    await flip_helper(ctx, data)
-
+async def flip(ctx, amount: float = 0):
+    await flip_helper(ctx, data, amount)
 
 @bot.command(help='Check your balance')
 async def balance(ctx):
@@ -45,6 +44,12 @@ async def balance(ctx):
 @bot.command(help='Out of money?')
 async def poor(ctx):
     await poor_helper(ctx, data, DEFAULT_BALANCE)
+
+@bot.command(help='Shutdown bot')
+async def shutdown(ctx):
+    save(data)
+    await ctx.send('Shutting down...')
+    await bot.close()
 
 bot.run(os.getenv('TOKEN'))
 
