@@ -34,7 +34,7 @@ async def on_ready():
     data = load()
     print('Ready!')
 
-@bot.command(help='!flip <amount> to bet on a coin. Default amount is 0.')
+@bot.command(help='flip <amount> to bet on a coin. Default amount is 0.')
 async def flip(ctx, amount: float = 0):
     await flip_helper(ctx, data, amount)
 
@@ -53,6 +53,16 @@ async def shutdown(ctx):
 @bot.command(help='leaderboard')
 async def leaderboard(ctx):
     await leaderboard_helper(ctx, data)
+
+@bot.command(help='battle <user> <amount> to battle another user. Default amount is 0.')
+async def battle(ctx, user: discord.User, amount: float = 0):
+    # await battle_helper(ctx, data, user, amount)
+    pass
+
+# @bot.command(help='chance to steal a portion of another user\'s balance')
+# async def steal(ctx, user: discord.User, amount: float = 0):
+#     # await battle_helper(ctx, data, user, amount)
+#     pass
 
 bot.run(os.getenv('TOKEN'))
 

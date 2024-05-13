@@ -7,20 +7,21 @@ async def flip_helper(ctx, data, amount):
     log('------\nflip', name, data)
     check_usr(data, ctx)
     if data[id]['balance'] < amount:
-        await ctx.send(f'**{name}** does not have enough coins to bet that amount!')
+        await ctx.send(f'**{ctx.author.mention}** does not have enough coins to bet that amount!')
         return
 
     if random.randint(0, 1) == 0:
-        cashout = determine_cashout() * amount
-        if cashout == 66:
+        multiplier = determine_cashout()
+        cashout = multiplier * amount
+        if multiplier == 66:
             await ctx.send(f'**JACKPOT**\n **+ ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"] + cashout:.2f}**')
         else:
             await ctx.send(f'Heads! **+ ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"] + cashout:.2f}**')
         data[id]['balance'] += cashout
     else:
         cashout = min(determine_loss() * amount, data[id]['balance'])
-        data[id]['balance'] -= cashout
         await ctx.send(f'Tails! **- ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"]:.2f}**')
+        data[id]['balance'] -= cashout
     save(data)
     log('flip(success)', name, data)
 
@@ -36,4 +37,4 @@ def determine_cashout():
         return 2
 
 def determine_loss():
-    return random.uniform(1.5, 2)
+    return random.uniform(1.5, 2.5)

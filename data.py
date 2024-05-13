@@ -6,7 +6,7 @@ def check_usr(data, ctx):
     if id not in data:
         data[id] = {
             "balance" : 1000,
-            "name" : ctx.author.global_name
+            "name" : ctx.author.global_name or ctx.author.name
         }
     save(data)
 
