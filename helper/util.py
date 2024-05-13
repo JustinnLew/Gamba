@@ -6,7 +6,7 @@ async def balance_helper(ctx, data):
     name = ctx.author.global_name
     log('------\nbalance', name, data)
     check_usr(data, ctx)
-    await ctx.send(f'{name} has **{data[id]["balance"]:.2f}** coins!')
+    await ctx.send(f'{ctx.author.mention} has **${data[id]["balance"]:.2f}**')
     log('balance(success)', name, data)
 
 async def poor_helper(ctx, data, default_balance):
@@ -16,7 +16,7 @@ async def poor_helper(ctx, data, default_balance):
     check_usr(data, ctx)
     if data[id]['balance'] < default_balance:
         data[id]['balance'] = default_balance
-        await ctx.send(f'{name} has been reset to **{default_balance:.2f}** coins!')
+        await ctx.send(f'{ctx.author.mention} has been reset to **${default_balance:.2f}**')
         save(data)
     log('poor(success)', name, data)
 

@@ -13,14 +13,14 @@ async def flip_helper(ctx, data, amount):
     if random.randint(0, 1) == 0:
         cashout = determine_cashout() * amount
         if cashout == 66:
-            await ctx.send(f'**JACKPOT**\n+ **{cashout:.2f}** coins!: *{name}* now has **{data[id]["balance"] + cashout:.2f}** coins!')
+            await ctx.send(f'**JACKPOT**\n **+ ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"] + cashout:.2f}**')
         else:
-            await ctx.send(f'Heads! **+ {cashout:.2f}** coins!: *{name}* now has **{data[id]["balance"] + cashout:.2f}** coins!')
+            await ctx.send(f'Heads! **+ ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"] + cashout:.2f}**')
         data[id]['balance'] += cashout
     else:
         cashout = min(determine_loss() * amount, data[id]['balance'])
         data[id]['balance'] -= cashout
-        await ctx.send(f'Tails! **- {cashout:.2f}** coins!: *{name}* now has **{data[id]["balance"]:.2f}** coins!')
+        await ctx.send(f'Tails! **- ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"]:.2f}**')
     save(data)
     log('flip(success)', name, data)
 
