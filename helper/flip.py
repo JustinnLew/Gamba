@@ -20,7 +20,7 @@ async def flip_helper(ctx, data, amount):
         data[id]['balance'] += cashout
     else:
         cashout = min(determine_loss() * amount, data[id]['balance'])
-        await ctx.send(f'Tails! **- ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"]:.2f}**')
+        await ctx.send(f'Tails! **- ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"] - cashout:.2f}**')
         data[id]['balance'] -= cashout
     save(data)
     log('flip(success)', name, data)
