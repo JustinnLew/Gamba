@@ -1,10 +1,12 @@
 import json
 import subprocess
 
-def check_usr(data, usr):
-    if usr not in data:
-        data[usr] = {
-            "balance" : 1000
+def check_usr(data, ctx):
+    id = str(ctx.author.id)
+    if id not in data:
+        data[id] = {
+            "balance" : 1000,
+            "name" : ctx.author.global_name
         }
     save(data)
 

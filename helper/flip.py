@@ -5,7 +5,7 @@ async def flip_helper(ctx, data, amount):
     id = str(ctx.author.id)
     name = ctx.author.global_name
     log('------\nflip', name, data)
-    check_usr(data, id)
+    check_usr(data, ctx)
     if data[id]['balance'] < amount:
         await ctx.send(f'**{name}** does not have enough coins to bet that amount!')
         return
