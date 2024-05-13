@@ -33,5 +33,5 @@ async def leaderboard_helper(ctx, data):
     leaderboard = sorted([(value['name'], value['balance']) for value in data.values()], key=lambda x: x[1], reverse=True)
     embed = discord.Embed(title="Leaderboard", color=discord.Color.gold())
     for i, (name, balance) in enumerate(leaderboard):
-        embed.add_field(value=f'{i+1}.  **{name}**: {balance:.2f}\n', name="\u200b", inline=False)
+        embed.add_field(value=f'{i+1}.  **{name}**:  ${balance:.2f}\n', name="\u200b", inline=False)
     await ctx.send(embed=embed)
