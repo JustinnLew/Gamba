@@ -24,6 +24,6 @@ def load():
 def log(command, user, data):
     num_lines = int(subprocess.run(['wc', '-l', 'log.txt'], shell=False, check=True, capture_output=True, text=True).stdout.split(' ')[0])
     if num_lines > 250:
-        subprocess.run(['sed', '-i', '1d', 'log.txt'], shell=False, check=True)
+        subprocess.run(['sed', '-i', '1,/------/d', 'log.txt'], shell=False, check=True)
     with open('log.txt', 'a') as f:
         f.write(f'{command} was used by {user} with resulting data {json.dumps(data, indent=2)}\n')
