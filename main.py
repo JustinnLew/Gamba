@@ -33,7 +33,7 @@ async def on_ready():
     data = load()
     print('Ready!')
 
-@bot.command(help='50/50')
+@bot.command(help='!flip <amount> to bet on a coin. Default amount is 0.')
 async def flip(ctx, amount: float = 0):
     await flip_helper(ctx, data, amount)
 
