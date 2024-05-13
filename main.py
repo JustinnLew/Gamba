@@ -10,6 +10,8 @@ from data import save, load, check_usr, log
 from importlib import import_module
 from helper.util import balance_helper, poor_helper, shutdown_helper, leaderboard_helper
 from helper.flip import flip_helper
+import datetime
+import re
 
 load_dotenv()
 
@@ -59,10 +61,30 @@ async def battle(ctx, user: discord.User, amount: float = 0):
     # await battle_helper(ctx, data, user, amount)
     pass
 
-# @bot.command(help='chance to steal a portion of another user\'s balance')
-# async def steal(ctx, user: discord.User, amount: float = 0):
-#     # await battle_helper(ctx, data, user, amount)
-#     pass
+@commands.cooldown(1, 3600, commands.BucketType.user)
+@bot.command(help='chance to steal a portion of another user\'s balance')
+async def steal(ctx):
+    log('------\nsteal', ctx.author.global_name, data)
+    chosen = random.choice(list(data.keys()))
+    if random.random() < 0.5 and chosen != str(ctx.author.id):
+        await ctx.send(f'Stealing from {data[chosen]["name"]}')
+        chosen_name = data[chosen]['name']
+        user_name = data[str(ctx.author.id)]['name']
+        amount_to_steal = 0.05 * data[chosen]['balance']
+        data[chosen]['balance'] -= amount_to_steal
+        data[str(ctx.author.id)]['balance'] += amount_to_steal
+        await ctx.send(f'You stole ${amount_to_steal:.2f} from **{chosen_name}**\n ~ **{user_name}** now has ${data[str(ctx.author.id)]["balance"]:.2f}\n ~ **{chosen_name}** now has ${data[chosen]["balance"]:.2f}')
+    else:
+        await ctx.send('You failed to steal from anyone')
+    save(data)
+    log('------\nsteal(success)', ctx.author.global_name, data)
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        time = str(datetime.timedelta(seconds=error.retry_after))
+        time = re.sub(r'.\d*$', '', time)
+        await ctx.send(f'This command is on cooldown, you can use it in {time}')
 
 bot.run(os.getenv('TOKEN'))
 
