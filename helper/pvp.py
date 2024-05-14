@@ -14,6 +14,7 @@ async def battle_helper(ctx, data, user, amount):
 
 async def steal_helper(ctx, data):
     log('------\nsteal', ctx.author.global_name, data)
+    check_usr(data, ctx)
     chosen = randomly_choose_user_in_guild(data, ctx)
     if random.random() < STEAL_CHANCE and chosen != str(ctx.author.id):
         chosen_name = data[chosen]['name']
