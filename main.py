@@ -13,6 +13,7 @@ from helper.flip import flip_helper
 from helper.pvp import battle_helper, steal_helper
 import datetime
 import re
+from time import sleep
 
 load_dotenv()
 
@@ -20,6 +21,7 @@ TOKEN = os.getenv('TOKEN')
 DEFAULT_BALANCE = float(os.getenv('DEFAULT_BALANCE'))
 MAGIC_ID = int(os.getenv('MAGIC_ID'))
 BOT_ID = int(os.getenv('BOT_ID'))
+BATTLE_INIT_HP= int(os.getenv('BATTLE_INIT_HP'))
 
 help_command = commands.DefaultHelpCommand(
     no_category = 'Commands'
@@ -60,9 +62,8 @@ async def leaderboard(ctx):
     await leaderboard_helper(ctx, data)
 
 @bot.command(help='battle <user> <amount> to battle another user. Default amount is 0.')
-async def battle(ctx, user: discord.User, amount: float = 0):
-    # await battle_helper(ctx, data, user, amount)
-    pass
+async def battle(ctx, opponent: discord.Member, amount: float = 0):
+    await battle_helper(ctx, data, opponent, amount, bot)
 
 @commands.cooldown(1, 3600, commands.BucketType.user)
 @bot.command(help='chance to steal a portion of another user\'s balance')

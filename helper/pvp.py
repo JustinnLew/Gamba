@@ -2,15 +2,72 @@ from data import save, load, check_usr, log
 import random
 import os
 from dotenv import load_dotenv
+from time import sleep
 
 load_dotenv()
 
 BOT_ID = int(os.getenv('BOT_ID'))
 STEAL_MULT = float(os.getenv('STEAL_MULT'))
 STEAL_CHANCE = float(os.getenv('STEAL_CHANCE'))
+BATTLE_INIT_HP = int(os.getenv('BATTLE_INIT_HP'))
 
-async def battle_helper(ctx, data, user, amount):
-    pass
+async def battle_helper(ctx, data, opponent, amount, bot):
+    check_usr(data, ctx)
+    challenger = ctx.author
+    challenger_id = str(challenger.id)
+    opponent_id = str(opponent.id)
+    if opponent == challenger:
+        await ctx.send("You cannot battle yourself!")
+        return
+    if amount < 0:
+        await ctx.send("You must bet a positive amount!")
+        return
+    if opponent_id not in data:
+        await ctx.send("Opponent has not registered!")
+        return
+    if data[challenger_id]['balance'] < amount:
+        await ctx.send(f"{challenger.mention} does not have enough money!")
+        return
+    if data[opponent_id]['balance'] < amount:
+        await ctx.send(f"{opponent.mention} does not have enough money!")
+        return
+
+    message = await ctx.send(f"{challenger.mention} challenges {opponent.mention} to a battle!\nReact with ✅ to accept the challenge")
+    await message.add_reaction('✅')
+    def check(reaction, user):
+        return user == opponent and str(reaction.emoji) == '✅'
+
+    try:
+        if await bot.wait_for('reaction_add', timeout=10.0, check=check):
+            await ctx.send(f"{opponent.mention} has accepted the challenge!")
+            result = await battle_loop(challenger, opponent, ctx)
+            if result:
+                data[challenger_id]['balance'] += amount
+                data[opponent_id]['balance'] -= amount
+                await ctx.send(f"{challenger.mention} has won the battle and received **{amount}**!\n{opponent.mention} has lost **{amount}**!")
+            else:
+                data[challenger_id]['balance'] -= amount
+                data[opponent_id]['balance'] += amount
+                await ctx.send(f"{opponent.mention} has won the battle and received **{amount}**!\n{challenger.mention} has lost **{amount}**!")
+    except:
+        await ctx.send(f"{opponent.mention} has declined the challenge!")
+        return
+
+async def battle_loop(challenger, opponent, ctx):
+    challenger_hp = BATTLE_INIT_HP
+    opponent_hp = BATTLE_INIT_HP
+    turn = random.randint(0, 1)
+    while challenger_hp > 0 and opponent_hp > 0:
+        damage = random.randint(5, 35)
+        if turn == 0:
+            opponent_hp = max(opponent_hp - damage, 0)
+            await ctx.send(f"{challenger.mention} attacks {opponent.mention} for **{damage}** damage! {opponent.mention} has **{opponent_hp}** HP left!\n")
+        else:
+            challenger_hp = max(challenger_hp - damage, 0)
+            await ctx.send(f"{opponent.mention} attacks {challenger.mention} for **{damage}** damage! {challenger.mention} has **{challenger_hp}** HP left!\n")
+        turn = 1 - turn
+        sleep(0.5)
+    return challenger_hp > 0
 
 async def steal_helper(ctx, data):
     log('------\nsteal', ctx.author.global_name, data)
@@ -35,3 +92,4 @@ def randomly_choose_user_in_guild(data, ctx):
     while chosen not in data or data[chosen]['balance'] == 0:
         chosen = str(random.choice(member_ids))
     return chosen
+
