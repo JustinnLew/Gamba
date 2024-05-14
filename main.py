@@ -61,6 +61,7 @@ async def shutdown(ctx):
 async def leaderboard(ctx):
     await leaderboard_helper(ctx, data)
 
+@commands.cooldown(1, 30, commands.BucketType.user)
 @bot.command(help='battle <user> <amount> to battle another user. Default amount is 0.')
 async def battle(ctx, opponent: discord.Member, amount: float = 0):
     await battle_helper(ctx, data, opponent, amount, bot)

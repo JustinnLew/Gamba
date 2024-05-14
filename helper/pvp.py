@@ -58,15 +58,14 @@ async def battle_loop(challenger, opponent, ctx):
     opponent_hp = BATTLE_INIT_HP
     turn = random.randint(0, 1)
     while challenger_hp > 0 and opponent_hp > 0:
-        damage = random.randint(5, 35)
+        damage = random.randint(5, 45)
         if turn == 0:
             opponent_hp = max(opponent_hp - damage, 0)
-            await ctx.send(f"{challenger.mention} attacks {opponent.mention} for **{damage}** damage! {opponent.mention} has **{opponent_hp}** HP left!\n")
+            await ctx.send(f"{challenger.mention} attacks {opponent.mention} for **{damage}** damage! {opponent.mention} has **{opponent_hp}** HP left!")
         else:
             challenger_hp = max(challenger_hp - damage, 0)
-            await ctx.send(f"{opponent.mention} attacks {challenger.mention} for **{damage}** damage! {challenger.mention} has **{challenger_hp}** HP left!\n")
+            await ctx.send(f"{opponent.mention} attacks {challenger.mention} for **{damage}** damage! {challenger.mention} has **{challenger_hp}** HP left!")
         turn = 1 - turn
-        sleep(0.5)
     return challenger_hp > 0
 
 async def steal_helper(ctx, data):
