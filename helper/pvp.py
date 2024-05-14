@@ -38,7 +38,7 @@ async def battle_helper(ctx, data, opponent, amount, bot):
         return user == opponent and str(reaction.emoji) == '✅'
 
     try:
-        if await bot.wait_for('reaction_add', timeout=10.0, check=check):
+        if await bot.wait_for('reaction_add', timeout=20.0, check=check):
             await ctx.send(f"{opponent.mention} has accepted the challenge!")
             result = await battle_loop(challenger, opponent, ctx)
             if result:
@@ -61,11 +61,13 @@ async def battle_loop(challenger, opponent, ctx):
         damage = random.randint(5, 45)
         if turn == 0:
             opponent_hp = max(opponent_hp - damage, 0)
-            await ctx.send(f"{challenger.mention} attacks {opponent.mention} for **{damage}** damage! {opponent.mention} has **{opponent_hp}** HP left!")
+            string = f"{challenger.mention} attacks for **{damage}** damage! {opponent.mention} has **{opponent_hp}** HP left!"
         else:
             challenger_hp = max(challenger_hp - damage, 0)
-            await ctx.send(f"{opponent.mention} attacks {challenger.mention} for **{damage}** damage! {challenger.mention} has **{challenger_hp}** HP left!")
+            string = f"{opponent.mention} attacks for **{damage}** damage! {challenger.mention} has **{challenger_hp}** HP left!"
         turn = 1 - turn
+        sleep(1)
+        await ctx.send(string)
     return challenger_hp > 0
 
 async def steal_helper(ctx, data):
