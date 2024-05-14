@@ -18,6 +18,7 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')
 DEFAULT_BALANCE = float(os.getenv('DEFAULT_BALANCE'))
 MAGIC_ID = int(os.getenv('MAGIC_ID'))
+BOT_ID = int(os.getenv('BOT_ID'))
 
 help_command = commands.DefaultHelpCommand(
     no_category = 'Commands'
@@ -25,6 +26,7 @@ help_command = commands.DefaultHelpCommand(
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents, help_command=help_command)
 
@@ -65,9 +67,8 @@ async def battle(ctx, user: discord.User, amount: float = 0):
 @bot.command(help='chance to steal a portion of another user\'s balance')
 async def steal(ctx):
     log('------\nsteal', ctx.author.global_name, data)
-    chosen = random.choice(list(data.keys()))
+    chosen = randomly_choose_user_in_guild(data, ctx)
     if random.random() < 0.5 and chosen != str(ctx.author.id):
-        await ctx.send(f'Stealing from {data[chosen]["name"]}')
         chosen_name = data[chosen]['name']
         user_name = data[str(ctx.author.id)]['name']
         amount_to_steal = 0.05 * data[chosen]['balance']
@@ -78,6 +79,14 @@ async def steal(ctx):
         await ctx.send('You failed to steal from anyone')
     save(data)
     log('------\nsteal(success)', ctx.author.global_name, data)
+
+def randomly_choose_user_in_guild(data, ctx):
+    member_ids = [member.id for member in ctx.guild.members]
+    member_ids.remove(BOT_ID)
+    chosen = str(random.choice(member_ids))
+    while chosen not in data or data[chosen]['balance'] == 0:
+        chosen = str(random.choice(member_ids))
+    return chosen
 
 @bot.event
 async def on_command_error(ctx, error):
