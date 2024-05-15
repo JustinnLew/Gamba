@@ -28,13 +28,11 @@ async def flip_helper(ctx, data, amount):
 def determine_cashout():
     roll = random.randint(0, 100)
     if roll == 66:
-        return 66
-    elif int(roll / 10) == 9:
-        return 3
+        return 100
     elif int(roll % 2) == 1:
-        return 1.5
-    else:
         return 2
+    else:
+        return 2.5
 
 def determine_loss():
-    return random.uniform(1.5, 2.5)
+    return random.uniform(1, 1.5)
