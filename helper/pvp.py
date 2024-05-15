@@ -52,6 +52,7 @@ async def battle_helper(ctx, data, opponent, amount, bot):
     except:
         await ctx.send(f"{opponent.mention} has declined the challenge!")
         return
+    save()
 
 async def battle_loop(challenger, opponent, ctx):
     challenger_hp = BATTLE_INIT_HP
