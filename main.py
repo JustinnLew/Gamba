@@ -8,7 +8,7 @@ from discord.ext import commands
 import pprint
 from data import save, load, check_usr, log
 from importlib import import_module
-from helper.util import balance_helper, poor_helper, shutdown_helper, leaderboard_helper
+from helper.util import balance_helper, poor_helper, shutdown_helper, leaderboard_helper, give_helper
 from helper.flip import flip_helper
 from helper.pvp import battle_helper, steal_helper
 import datetime
@@ -46,8 +46,8 @@ async def flip(ctx, amount: float = 0):
     await flip_helper(ctx, data, amount)
 
 @bot.command(help='Check your balance')
-async def balance(ctx):
-    await balance_helper(ctx, data)
+async def balance(ctx, usr: discord.Member = None):
+    await balance_helper(ctx, data, usr)
 
 @bot.command(help='Out of money?')
 async def poor(ctx):
@@ -70,6 +70,10 @@ async def battle(ctx, opponent: discord.Member, amount: float = 0):
 @bot.command(help='chance to steal a portion of another user\'s balance')
 async def steal(ctx):
     await steal_helper(ctx, data)
+
+@bot.command(help='give <user> <amount> to give another user coins')
+async def give(ctx, user: discord.Member, amount: float):
+    await give_helper(ctx, data, user, amount)
 
 @bot.event
 async def on_command_error(ctx, error):
