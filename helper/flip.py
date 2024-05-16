@@ -3,7 +3,7 @@ import random
 
 async def flip_helper(ctx, data, amount):
     id = str(ctx.author.id)
-    name = ctx.author.global_name
+    name = ctx.author.global_name or ctx.author.name
     log('------\nflip', name, data)
     check_usr(data, ctx)
     if data[id]['balance'] < amount:
