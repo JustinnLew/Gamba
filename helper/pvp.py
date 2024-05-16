@@ -1,4 +1,4 @@
-from data import save, load, check_usr, log
+from data import save, load, check_usr
 import random
 import os
 from dotenv import load_dotenv
@@ -70,7 +70,6 @@ async def battle_loop(challenger, opponent, ctx):
     return challenger_hp > 0
 
 async def steal_helper(ctx, data):
-    log('------\nsteal', ctx.author.name, data)
     chosen = randomly_choose_user_in_guild(data, ctx)
     if random.random() < STEAL_CHANCE and chosen != str(ctx.author.id):
         chosen_name = data[chosen]['name']
@@ -81,7 +80,6 @@ async def steal_helper(ctx, data):
         await ctx.send(f'You stole ${amount_to_steal:.2f} from **{chosen_name}**\n ~ **{user_name}** now has ${data[str(ctx.author.id)]["balance"]:.2f}\n ~ **{chosen_name}** now has ${data[chosen]["balance"]:.2f}')
     else:
         await ctx.send('You failed to steal from anyone')
-    log('------\nsteal(success)', ctx.author.global_name, data)
 
 def randomly_choose_user_in_guild(data, ctx):
     member_ids = [member.id for member in ctx.guild.members]

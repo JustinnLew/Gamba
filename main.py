@@ -43,7 +43,6 @@ async def on_ready():
 
 @bot.before_invoke
 async def before_all(ctx):
-    print(f'{ctx.author} invoked {ctx.command} at {datetime.datetime.now()}')
     check_usr(data, ctx)
 
 @bot.after_invoke
@@ -52,20 +51,15 @@ async def after_all(ctx):
 
 @bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.')
 async def flip(ctx, amount: float = 0):
-    check_usr(data, ctx)
     await flip_helper(ctx, data["users"], amount)
-    save(data)
 
 @bot.command(name='balance', aliases=['b'], help='Check your balance')
 async def balance(ctx, usr: discord.Member = None):
-    check_usr(data, ctx)
     await balance_helper(ctx, data["users"], usr)
 
 @bot.command(name='poor', aliases=['p'], help='Out of money?')
 async def poor(ctx):
-    check_usr(data, ctx)
     await poor_helper(ctx, data["users"], DEFAULT_BALANCE)
-    save(data)
 
 @bot.command(help='leaderboard')
 async def leaderboard(ctx):
@@ -74,22 +68,16 @@ async def leaderboard(ctx):
 @commands.cooldown(1, 60, commands.BucketType.user)
 @bot.command(name='battle', aliases=['fight'], help='battle <user> <amount> to battle another user. Default amount is 0.')
 async def battle(ctx, opponent: discord.Member, amount: float = 0):
-    check_usr(data, ctx)
     await battle_helper(ctx, data["users"], opponent, amount, bot)
-    save(data)
 
 @commands.cooldown(1, 3600, commands.BucketType.user)
 @bot.command(help='chance to steal a portion of another user\'s balance')
 async def steal(ctx):
-    check_usr(data, ctx)
     await steal_helper(ctx, data["users"])
-    save(data)
 
 @bot.command(help='give <user> <amount> to give another user coins')
 async def give(ctx, user: discord.Member, amount: float):
-    check_usr(data, ctx)
     await give_helper(ctx, data["users"], user, amount)
-    save(data)
 
 @bot.event
 async def on_command_error(ctx, error):

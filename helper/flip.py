@@ -1,10 +1,9 @@
-from data import save, load, check_usr, log
+from data import save, load, check_usr
 import random
 
 async def flip_helper(ctx, data, amount):
     id = str(ctx.author.id)
     name = ctx.author.global_name or ctx.author.name
-    log('------\nflip', name, data)
     if data[id]['balance'] < amount:
         await ctx.send(f'**{ctx.author.mention}** does not have enough coins to bet that amount!')
         return
@@ -21,7 +20,6 @@ async def flip_helper(ctx, data, amount):
         cashout = min(determine_loss() * amount, data[id]['balance'])
         await ctx.send(f'Tails! **- ${cashout:.2f}**: {ctx.author.mention} now has **${data[id]["balance"] - cashout:.2f}**')
         data[id]['balance'] -= cashout
-    log('flip(success)', name, data)
 
 def determine_cashout():
     roll = random.randint(0, 100)

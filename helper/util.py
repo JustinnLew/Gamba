@@ -1,4 +1,4 @@
-from data import save, load, log
+from data import save, load
 import discord
 
 async def balance_helper(ctx, data, usr):
@@ -13,11 +13,9 @@ async def balance_helper(ctx, data, usr):
 async def poor_helper(ctx, data, default_balance):
     id = str(ctx.author.id)
     name = ctx.author.global_name
-    log('------\npoor', name, data)
     if data[id]['balance'] < default_balance:
         data[id]['balance'] = default_balance
         await ctx.send(f'{ctx.author.mention} has been reset to **${default_balance:.2f}**')
-    log('poor(success)', name, data)
 
 async def shutdown_helper(ctx, bot, MAGIC_ID):
     if ctx.author.id != MAGIC_ID:
@@ -29,7 +27,6 @@ async def shutdown_helper(ctx, bot, MAGIC_ID):
 async def give_helper(ctx, data, user, amount):
     id = str(ctx.author.id)
     name = ctx.author.global_name
-    log('give', name, data)
     if data[id]['balance'] < amount:
         await ctx.send(f'**{ctx.author.mention}** does not have enough coins to give that amount!')
         return
@@ -39,7 +36,6 @@ async def give_helper(ctx, data, user, amount):
     data[id]['balance'] -= amount
     data[str(user.id)]['balance'] += amount
     await ctx.send(f'{ctx.author.mention} has given {user.mention} **${amount:.2f}**')
-    log('give(success)', name, data)
 
 async def leaderboard_helper(ctx, data):
     leaderboard = sorted([(value['name'], value['balance']) for value in data.values()], key=lambda x: x[1], reverse=True)
