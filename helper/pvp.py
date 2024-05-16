@@ -43,11 +43,11 @@ async def battle_helper(ctx, data, opponent, amount, bot):
             if result:
                 data[challenger_id]['balance'] += amount
                 data[opponent_id]['balance'] -= amount
-                await ctx.send(f"{challenger.mention} has won the battle and received **{amount}**!\n{opponent.mention} has lost **{amount}**!")
+                await ctx.send(f"{challenger.mention} has won the battle and received **{amount:,.2f}**!\n{opponent.mention} has lost **{amount:,.2f}**!")
             else:
                 data[challenger_id]['balance'] -= amount
                 data[opponent_id]['balance'] += amount
-                await ctx.send(f"{opponent.mention} has won the battle and received **{amount}**!\n{challenger.mention} has lost **{amount}**!")
+                await ctx.send(f"{opponent.mention} has won the battle and received **{amount:,.2f}**!\n{challenger.mention} has lost **{amount:,.2f}**!")
     except:
         await ctx.send(f"{opponent.mention} has declined the challenge!")
         return
@@ -77,7 +77,7 @@ async def steal_helper(ctx, data):
         amount_to_steal = STEAL_MULT * data[chosen]['balance']
         data[chosen]['balance'] -= amount_to_steal
         data[str(ctx.author.id)]['balance'] += amount_to_steal
-        await ctx.send(f'You stole ${amount_to_steal:.2f} from **{chosen_name}**\n ~ **{user_name}** now has ${data[str(ctx.author.id)]["balance"]:.2f}\n ~ **{chosen_name}** now has ${data[chosen]["balance"]:.2f}')
+        await ctx.send(f'You stole ${amount_to_steal:,.2f} from **{chosen_name}**\n ~ **{user_name}** now has ${data[str(ctx.author.id)]["balance"]:,.2f}\n ~ **{chosen_name}** now has ${data[chosen]["balance"]:,.2f}')
     else:
         await ctx.send('You failed to steal from anyone')
 

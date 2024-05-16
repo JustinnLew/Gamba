@@ -12,7 +12,7 @@ from helper.flip import flip_helper
 from helper.pvp import battle_helper, steal_helper
 import datetime
 import re
-from time import sleep
+from asyncio import sleep
 
 load_dotenv()
 
@@ -23,7 +23,7 @@ BOT_ID = int(os.getenv('BOT_ID'))
 BATTLE_INIT_HP= int(os.getenv('BATTLE_INIT_HP'))
 
 # GLOBAL KILL FLAG
-ENABLED = False
+ENABLED = True
 
 help_command = commands.DefaultHelpCommand(
     no_category = 'Commands'
@@ -31,6 +31,7 @@ help_command = commands.DefaultHelpCommand(
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.reactions = True
 intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents, help_command=help_command)
@@ -61,10 +62,46 @@ async def on_command_error(ctx, error):
         time = re.sub(r'.\d*$', '', time)
         await ctx.send(f'This command is on cooldown, you can use it in {time}')
     if isinstance(error, commands.DisabledCommand):
-        await ctx.send('This command is disabled')
+        await ctx.send('Under maintenence')
 
 # -------------------------------------------- COMMANDS --------------------------------------------
 
+@bot.command(name='gamba-create', help='Create a gamba', enabled = True)
+async def gamba_create(ctx, *args):
+    name = ' '.join(args)
+    if data["gamba"]:
+        await ctx.send('Gamba already in progress')
+        return
+    data["gamba"] = {
+        "owner": {
+            "id": ctx.author.id,
+            "name": ctx.author.global_name or ctx.author.name
+        },
+        "name": name,
+        "yes": {},
+        "no": {}
+    }
+    await ctx.send(f'```fix\nGamba Created: {name}```')
+
+@bot.command(name='gamba-delete', help='Delete a gamba', enabled = True)
+async def delete_gamba(ctx):
+    if not data["gamba"]["owner"]:
+        await ctx.send('No gamba in progress')
+        return
+    if data["gamba"]["owner"] != ctx.author.id:
+        await ctx.send('You do not own the gamba')
+        return
+    data["gamba"] = None
+    await ctx.send('```fix\nGamba Deleted```')
+
+@bot.command(name='gamba-view', help='View current gamba', enabled = True)
+async def view_gamba(ctx):
+    embed = discord.Embed(title='Gamba', color=discord.Color.pink())
+    embed.add_field(name='Owner', value=data["gamba"]["owner"]["name"])
+    embed.add_field(name='Name', value=data["gamba"]["name"])
+    await ctx.send(embed=embed)
+
+@commands.cooldown(1, 1, commands.BucketType.user)
 @bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.', enabled = ENABLED)
 async def flip(ctx, amount: float = 0):
     await flip_helper(ctx, data["users"], amount)
@@ -87,7 +124,7 @@ async def battle(ctx, opponent: discord.Member, amount: float = 0):
     await battle_helper(ctx, data["users"], opponent, amount, bot)
 
 @commands.cooldown(1, 3600, commands.BucketType.user)
-@bot.command(help='chance to steal a portion of another user\'s balance', enabled = ENABLED)
+@bot.command(name='steal', aliases=['s'], help='chance to steal a portion of another user\'s balance', enabled = ENABLED)
 async def steal(ctx):
     await steal_helper(ctx, data["users"])
 
