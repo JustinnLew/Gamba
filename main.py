@@ -41,33 +41,38 @@ async def on_ready():
     data = load()
     print('Ready!')
 
-@bot.command(help='flip <amount> to bet on a coin. Default amount is 0.')
+@bot.before_invoke
+async def before_all(ctx):
+    print(f'{ctx.author} invoked {ctx.command} at {datetime.datetime.now()}')
+    check_usr(data, ctx)
+
+@bot.after_invoke
+async def after_all(ctx):
+    save(data)
+
+@bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.')
 async def flip(ctx, amount: float = 0):
     check_usr(data, ctx)
     await flip_helper(ctx, data["users"], amount)
     save(data)
 
-@bot.command(help='Check your balance')
+@bot.command(name='balance', aliases=['b'], help='Check your balance')
 async def balance(ctx, usr: discord.Member = None):
     check_usr(data, ctx)
     await balance_helper(ctx, data["users"], usr)
 
-@bot.command(help='Out of money?')
+@bot.command(name='poor', aliases=['p'], help='Out of money?')
 async def poor(ctx):
     check_usr(data, ctx)
     await poor_helper(ctx, data["users"], DEFAULT_BALANCE)
     save(data)
-
-@bot.command(help='Shutdown bot')
-async def shutdown(ctx):
-    await shutdown_helper(ctx, bot, MAGIC_ID, data)
 
 @bot.command(help='leaderboard')
 async def leaderboard(ctx):
     await leaderboard_helper(ctx, data["users"])
 
 @commands.cooldown(1, 60, commands.BucketType.user)
-@bot.command(help='battle <user> <amount> to battle another user. Default amount is 0.')
+@bot.command(name='battle', aliases=['fight'], help='battle <user> <amount> to battle another user. Default amount is 0.')
 async def battle(ctx, opponent: discord.Member, amount: float = 0):
     check_usr(data, ctx)
     await battle_helper(ctx, data["users"], opponent, amount, bot)
