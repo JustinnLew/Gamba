@@ -7,8 +7,7 @@ import random
 from discord.ext import commands
 import pprint
 from data import save, load, check_usr, log
-from importlib import import_module
-from helper.util import balance_helper, poor_helper, shutdown_helper, leaderboard_helper, give_helper
+from helper.util import balance_helper, poor_helper, leaderboard_helper, give_helper
 from helper.flip import flip_helper
 from helper.pvp import battle_helper, steal_helper
 import datetime
