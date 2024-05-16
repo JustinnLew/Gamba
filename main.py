@@ -73,6 +73,7 @@ async def gamba_create(ctx, *args):
         await ctx.send('Gamba already in progress')
         return
     data["gamba"] = {
+        "state": "betting",
         "owner": {
             "id": ctx.author.id,
             "name": ctx.author.global_name or ctx.author.name
@@ -82,13 +83,19 @@ async def gamba_create(ctx, *args):
         "no": {}
     }
     await ctx.send(f'```fix\nGamba Created: {name}```')
+    await ctx.send(f"```yaml\n!gamba-yes <amount> to vote yes\n```")
+    await ctx.send(f"```yaml\n!gamba-no <amount> to vote no\n```")
+    await ctx.send(f"```md\n> Betting ends in 30 seconds\n```")
+    await sleep(30)
+    data["gamba"]["state"] = "closed"
+    await ctx.send(f"```md\n> Betting closed\n```")
 
 @bot.command(name='gamba-delete', help='Delete a gamba', enabled = True)
 async def delete_gamba(ctx):
     if not data["gamba"]["owner"]:
         await ctx.send('No gamba in progress')
         return
-    if data["gamba"]["owner"] != ctx.author.id:
+    if data["gamba"]["owner"]["id"] != ctx.author.id:
         await ctx.send('You do not own the gamba')
         return
     data["gamba"] = None
@@ -99,6 +106,7 @@ async def view_gamba(ctx):
     embed = discord.Embed(title='Gamba', color=discord.Color.pink())
     embed.add_field(name='Owner', value=data["gamba"]["owner"]["name"])
     embed.add_field(name='Name', value=data["gamba"]["name"])
+    embed.add_field(name='State', value=data["gamba"]["state"])
     await ctx.send(embed=embed)
 
 @commands.cooldown(1, 1, commands.BucketType.user)
