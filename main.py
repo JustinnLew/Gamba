@@ -43,15 +43,21 @@ async def on_ready():
 
 @bot.command(help='flip <amount> to bet on a coin. Default amount is 0.')
 async def flip(ctx, amount: float = 0):
-    await flip_helper(ctx, data, amount)
+    check_usr(data, ctx)
+    await flip_helper(ctx, data["users"], amount)
+    save(data)
 
 @bot.command(help='Check your balance')
 async def balance(ctx, usr: discord.Member = None):
-    await balance_helper(ctx, data, usr)
+    check_usr(data, ctx)
+    await balance_helper(ctx, data["users"], usr)
+    save(data)
 
 @bot.command(help='Out of money?')
 async def poor(ctx):
-    await poor_helper(ctx, data, DEFAULT_BALANCE)
+    check_usr(data, ctx)
+    await poor_helper(ctx, data["users"], DEFAULT_BALANCE)
+    save(data)
 
 @bot.command(help='Shutdown bot')
 async def shutdown(ctx):
@@ -59,21 +65,28 @@ async def shutdown(ctx):
 
 @bot.command(help='leaderboard')
 async def leaderboard(ctx):
-    await leaderboard_helper(ctx, data)
+    await leaderboard_helper(ctx, data["users"])
+    save(data)
 
 @commands.cooldown(1, 60, commands.BucketType.user)
 @bot.command(help='battle <user> <amount> to battle another user. Default amount is 0.')
 async def battle(ctx, opponent: discord.Member, amount: float = 0):
-    await battle_helper(ctx, data, opponent, amount, bot)
+    check_usr(data, ctx)
+    await battle_helper(ctx, data["users"], opponent, amount, bot)
+    save(data)
 
 @commands.cooldown(1, 3600, commands.BucketType.user)
 @bot.command(help='chance to steal a portion of another user\'s balance')
 async def steal(ctx):
-    await steal_helper(ctx, data)
+    check_usr(data, ctx)
+    await steal_helper(ctx, data["users"])
+    save(data)
 
 @bot.command(help='give <user> <amount> to give another user coins')
 async def give(ctx, user: discord.Member, amount: float):
-    await give_helper(ctx, data, user, amount)
+    check_usr(data, ctx)
+    await give_helper(ctx, data["users"], user, amount)
+    save(data)
 
 @bot.event
 async def on_command_error(ctx, error):

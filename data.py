@@ -3,8 +3,8 @@ import subprocess
 
 def check_usr(data, ctx):
     id = str(ctx.author.id)
-    if id not in data:
-        data[id] = {
+    if id not in data["users"]:
+        data["users"][id] = {
             "balance" : 1000,
             "name" : ctx.author.global_name or ctx.author.name
         }

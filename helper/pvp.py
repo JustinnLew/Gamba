@@ -12,7 +12,6 @@ STEAL_CHANCE = float(os.getenv('STEAL_CHANCE'))
 BATTLE_INIT_HP = int(os.getenv('BATTLE_INIT_HP'))
 
 async def battle_helper(ctx, data, opponent, amount, bot):
-    check_usr(data, ctx)
     challenger = ctx.author
     challenger_id = str(challenger.id)
     opponent_id = str(opponent.id)
@@ -52,7 +51,6 @@ async def battle_helper(ctx, data, opponent, amount, bot):
     except:
         await ctx.send(f"{opponent.mention} has declined the challenge!")
         return
-    save()
 
 async def battle_loop(challenger, opponent, ctx):
     challenger_hp = BATTLE_INIT_HP
@@ -73,7 +71,6 @@ async def battle_loop(challenger, opponent, ctx):
 
 async def steal_helper(ctx, data):
     log('------\nsteal', ctx.author.global_name, data)
-    check_usr(data, ctx)
     chosen = randomly_choose_user_in_guild(data, ctx)
     if random.random() < STEAL_CHANCE and chosen != str(ctx.author.id):
         chosen_name = data[chosen]['name']
@@ -84,7 +81,6 @@ async def steal_helper(ctx, data):
         await ctx.send(f'You stole ${amount_to_steal:.2f} from **{chosen_name}**\n ~ **{user_name}** now has ${data[str(ctx.author.id)]["balance"]:.2f}\n ~ **{chosen_name}** now has ${data[chosen]["balance"]:.2f}')
     else:
         await ctx.send('You failed to steal from anyone')
-    save(data)
     log('------\nsteal(success)', ctx.author.global_name, data)
 
 def randomly_choose_user_in_guild(data, ctx):
