@@ -38,6 +38,8 @@ bot = commands.Bot(command_prefix='!', intents=intents, help_command=help_comman
 
 data = {}
 
+# -------------------------------------------- BOT SETUP --------------------------------------------
+
 @bot.event
 async def on_ready():
     global data
@@ -52,6 +54,17 @@ async def before_all(ctx):
 async def after_all(ctx):
     log(f'{ctx.author.name}: Invoked {ctx.message.content} on {datetime.datetime.now()}', data)
     save(data)
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        time = str(datetime.timedelta(seconds=error.retry_after))
+        time = re.sub(r'.\d*$', '', time)
+        await ctx.send(f'This command is on cooldown, you can use it in {time}')
+    if isinstance(error, commands.DisabledCommand):
+        await ctx.send('This command is disabled')
+
+# -------------------------------------------- COMMANDS --------------------------------------------
 
 @bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.', enabled = ENABLED)
 async def flip(ctx, amount: float = 0):
@@ -83,14 +96,7 @@ async def steal(ctx):
 async def give(ctx, user: discord.Member, amount: float):
     await give_helper(ctx, data["users"], user, amount)
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        time = str(datetime.timedelta(seconds=error.retry_after))
-        time = re.sub(r'.\d*$', '', time)
-        await ctx.send(f'This command is on cooldown, you can use it in {time}')
-    if isinstance(error, commands.DisabledCommand):
-        await ctx.send('This command is disabled')
+# ----------------------------------------------------------------------------------------------
 
 bot.run(os.getenv('TOKEN'))
 
