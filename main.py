@@ -51,7 +51,6 @@ async def flip(ctx, amount: float = 0):
 async def balance(ctx, usr: discord.Member = None):
     check_usr(data, ctx)
     await balance_helper(ctx, data["users"], usr)
-    save(data)
 
 @bot.command(help='Out of money?')
 async def poor(ctx):
@@ -66,7 +65,6 @@ async def shutdown(ctx):
 @bot.command(help='leaderboard')
 async def leaderboard(ctx):
     await leaderboard_helper(ctx, data["users"])
-    save(data)
 
 @commands.cooldown(1, 60, commands.BucketType.user)
 @bot.command(help='battle <user> <amount> to battle another user. Default amount is 0.')
