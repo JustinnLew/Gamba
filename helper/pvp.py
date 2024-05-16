@@ -70,7 +70,7 @@ async def battle_loop(challenger, opponent, ctx):
     return challenger_hp > 0
 
 async def steal_helper(ctx, data):
-    log('------\nsteal', ctx.author.global_name, data)
+    log('------\nsteal', ctx.author.name, data)
     chosen = randomly_choose_user_in_guild(data, ctx)
     if random.random() < STEAL_CHANCE and chosen != str(ctx.author.id):
         chosen_name = data[chosen]['name']
