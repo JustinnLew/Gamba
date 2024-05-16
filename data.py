@@ -33,4 +33,4 @@ def log(message, data):
     compressed_bytes = gzip.compress(json_str.encode('utf-8'))
     compressed_base64 = base64.b64encode(compressed_bytes).decode('utf-8')
     with open('log.txt', 'a') as f:
-        f.write(f'{message}\n{compressed_base64}\n')
+        f.write(f'{message}\n{compressed_base64}\n------\n')

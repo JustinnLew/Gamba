@@ -43,12 +43,11 @@ async def on_ready():
 
 @bot.before_invoke
 async def before_all(ctx):
-    log(f'{ctx.author.name}: Invoked {ctx.message.content}', data)
     check_usr(data, ctx)
 
 @bot.after_invoke
 async def after_all(ctx):
-    log(f'{ctx.author.name}: After Invoking {ctx.message.content}', data)
+    log(f'{ctx.author.name}: Invoked {ctx.message.content} on {datetime.datetime.now()}', data)
     save(data)
 
 @bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.')
