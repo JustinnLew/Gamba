@@ -17,7 +17,7 @@ async def flip_helper(ctx, data, amount):
             await ctx.send(f'Heads! **+ ${cashout:,.2f}**: {ctx.author.mention} now has **${data[id]["balance"] + cashout:,.2f}**')
         data[id]['balance'] += cashout
     else:
-        cashout = min(determine_loss() * amount, data[id]['balance'])
+        cashout = min(1 * amount, data[id]['balance'])
         await ctx.send(f'Tails! **- ${cashout:,.2f}**: {ctx.author.mention} now has **${data[id]["balance"] - cashout:,.2f}**')
         data[id]['balance'] -= cashout
 
@@ -25,10 +25,8 @@ def determine_cashout():
     roll = random.randint(0, 100)
     if roll == 66:
         return 100
-    elif int(roll % 2) == 1:
-        return 2
     else:
-        return 2.5
+        return 1
 
 def determine_loss():
     return random.uniform(1, 1.5)

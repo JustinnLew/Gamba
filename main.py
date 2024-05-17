@@ -66,7 +66,7 @@ async def on_command_error(ctx, error):
 
 # -------------------------------------------- COMMANDS --------------------------------------------
 
-@bot.command(name='gamba-create', help='Create a gamba', enabled = True)
+@bot.command(name='gamba-create', help='Create a gamba', enabled = ENABLED)
 async def gamba_create(ctx, *args):
     name = ' '.join(args)
     if data["gamba"]:
@@ -90,7 +90,7 @@ async def gamba_create(ctx, *args):
     data["gamba"]["state"] = "closed"
     await ctx.send(f"```md\n> Betting closed\n```")
 
-@bot.command(name='gamba-delete', help='Delete a gamba', enabled = True)
+@bot.command(name='gamba-delete', help='Delete a gamba', enabled = ENABLED)
 async def delete_gamba(ctx):
     if not data["gamba"]["owner"]:
         await ctx.send('No gamba in progress')
@@ -101,13 +101,18 @@ async def delete_gamba(ctx):
     data["gamba"] = None
     await ctx.send('```fix\nGamba Deleted```')
 
-@bot.command(name='gamba-view', help='View current gamba', enabled = True)
+@bot.command(name='gamba-view', help='View current gamba', enabled = ENABLED)
 async def view_gamba(ctx):
     embed = discord.Embed(title='Gamba', color=discord.Color.pink())
     embed.add_field(name='Owner', value=data["gamba"]["owner"]["name"])
     embed.add_field(name='Name', value=data["gamba"]["name"])
     embed.add_field(name='State', value=data["gamba"]["state"])
     await ctx.send(embed=embed)
+
+# TODO
+# @bot.command(name='gamba-yes', help='Bet on yes', enabled = ENABLED)
+# @bot.command(name='gamba-no', help='Bet on no', enabled = ENABLED)
+# @bot.command(name='gamba-end', help='End gamba', enabled = ENABLED)
 
 @commands.cooldown(1, 1, commands.BucketType.user)
 @bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.', enabled = ENABLED)
@@ -122,7 +127,7 @@ async def balance(ctx, usr: discord.Member = None):
 async def poor(ctx):
     await poor_helper(ctx, data["users"], DEFAULT_BALANCE)
 
-@bot.command(help='leaderboard', enabled = ENABLED)
+@bot.command(name='leaderboard', aliases=['l'], help='money leaderboard', enabled = ENABLED)
 async def leaderboard(ctx):
     await leaderboard_helper(ctx, data["users"])
 
