@@ -63,7 +63,7 @@ async def on_command_error(ctx, error):
         time = re.sub(r'.\d*$', '', time)
         await ctx.send(f'This command is on cooldown, you can use it in {time}')
     if isinstance(error, commands.DisabledCommand):
-        await ctx.send('Watch the game')
+        await ctx.send('This command is currently disabled')
 
 # -------------------------------------------- COMMANDS --------------------------------------------
 
