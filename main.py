@@ -217,6 +217,7 @@ async def end_gamba(ctx, result):
                 winnings = ((v["amount"] / no_total) * yes_total)
                 data["users"][v["id"]]['balance'] += v["amount"] + winnings
                 await ctx.send(f'```fix\n{v["name"]} won {winnings}```')
+    data["gamba"] = None
 
 @commands.cooldown(1, 1, commands.BucketType.user)
 @bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.', enabled = ENABLED)
