@@ -98,6 +98,8 @@ async def delete_gamba(ctx):
     if data["gamba"]["owner"]["id"] != ctx.author.id:
         await ctx.send('You do not own the gamba')
         return
+    for v in data["gamba"]["votes"]:
+        data["users"][v["id"]]['balance'] += v["amount"]
     data["gamba"] = None
     await ctx.send('```fix\nGamba Deleted```')
 
