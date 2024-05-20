@@ -1,9 +1,11 @@
-from data import save, load, check_usr
 import random
 
 async def flip_helper(ctx, data, amount):
+    if amount == 'all' or amount == 'ALL':
+        amount = float(data["users"][str(ctx.author.id)]['balance'])
+    else:
+        amount = float(amount)
     id = str(ctx.author.id)
-    name = ctx.author.global_name or ctx.author.name
     if data[id]['balance'] < amount:
         await ctx.send(f'**{ctx.author.mention}** does not have enough coins to bet that amount!')
         return
