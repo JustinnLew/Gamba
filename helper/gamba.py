@@ -6,7 +6,7 @@ from data import save
 load_dotenv()
 
 async def gamba_delete_helper(ctx, data):
-    if not data["gamba"]["owner"]:
+    if not data["gamba"]:
         await ctx.send('No gamba in progress')
         return
     if data["gamba"]["owner"]["id"] != ctx.author.id:
@@ -40,6 +40,9 @@ async def gamba_create_helper(ctx, data, duration, name):
     await ctx.send(f"```md\n> Betting closed\n```")
 
 async def gamba_view_helper(ctx, data):
+    if not data["gamba"]:
+        await ctx.send('No gamba in progress')
+        return
     embed = discord.Embed(title='Gamba', color=discord.Color.pink())
     embed.add_field(name='Owner', value=data["gamba"]["owner"]["name"])
     embed.add_field(name='Name', value=data["gamba"]["name"])
@@ -84,6 +87,9 @@ async def gamba_choice_helper(ctx, data, choice, amount):
     await ctx.send(f'```fix\nbet place by {name} for {amount} on {choice}```')
 
 async def my_gamba_helper(ctx, data):
+    if not data["gamba"]:
+        await ctx.send('No gamba in progress')
+        return
     name = ctx.author.global_name or ctx.author.name
     for v in data["gamba"]["votes"]:
         if v["name"] == name:
