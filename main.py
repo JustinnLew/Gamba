@@ -208,13 +208,13 @@ async def end_gamba(ctx, result):
     if result == "yes":
         for v in data["gamba"]["votes"]:
             if v["choice"] == "yes":
-                winnings = ((yes_total / v["amount"]) * no_total)
+                winnings = ((v["amount"] / yes_total) * no_total)
                 data["users"][v["id"]]['balance'] += v["amount"] + winnings
                 await ctx.send(f'```fix\n{v["name"]} won {winnings}```')
     else:
         for v in data["gamba"]["votes"]:
             if v["choice"] == "no":
-                winnings = ((no_total / v["amount"]) * yes_total)
+                winnings = ((v["amount"] / no_total) * yes_total)
                 data["users"][v["id"]]['balance'] += v["amount"] + winnings
                 await ctx.send(f'```fix\n{v["name"]} won {winnings}```')
 
@@ -253,7 +253,15 @@ async def steal(ctx):
 async def give(ctx, user: discord.Member, amount: float):
     await give_helper(ctx, data["users"], user, amount)
 
+@commands.cooldown(1, 86400, commands.BucketType.user)
+@bot.command(name='daily', aliases=['d'], help='daily free money', enabled = ENABLED)
+async def daily(ctx):
+    id = str(ctx.author.id)
+    amount = random.randint(1, 1000000)
+    data["users"][id]['balance'] += amount
+    await ctx.send(f'**+ ${amount:,.2f}**: {ctx.author.mention} now has **${data["users"][id]["balance"]:,.2f}**')
+
 # ----------------------------------------------------------------------------------------------
 
-bot.run(os.getenv('TOKEN'))
+bot.run(TOKEN)
 
