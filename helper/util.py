@@ -36,7 +36,12 @@ async def give_helper(ctx, data, user, amount):
     await ctx.send(f'{ctx.author.mention} has given {user.mention} **${amount:,.2f}**')
 
 async def leaderboard_helper(ctx, data):
-    leaderboard = sorted([(value['name'], value['balance']) for value in data.values()], key=lambda x: x[1], reverse=True)
+    member_ids = [member.id for member in ctx.guild.members]
+    l = {}
+    for member_id in member_ids:
+        if str(member_id) in data:
+            l[member_id] = data[str(member_id)]
+    leaderboard = sorted([(value['name'], value['balance']) for value in l.values()], key=lambda x: x[1], reverse=True)
     embed = discord.Embed(title="Leaderboard", color=discord.Color.gold())
     for i, (name, balance) in enumerate(leaderboard):
         embed.add_field(value=f'{i+1}.  **{name}**:  ${balance:,.2f}\n', name="\u200b", inline=False)
