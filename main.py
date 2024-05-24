@@ -67,40 +67,40 @@ async def on_command_error(ctx, error):
 
 # -------------------------------------------- COMMANDS --------------------------------------------
 
-@bot.command(name='gamba-create', help='Create a gamba', enabled = ENABLED)
+@bot.command(name='gamba-create', help='!gamba-create <voting duration (seconds)> <*name>', description="create a gamba", enabled = ENABLED)
 async def gamba_create(ctx, duration: int, *args):
     await gamba_create_helper(ctx, data, duration, ' '.join(args))
 
-@bot.command(name='gamba-delete', help='Delete a gamba', enabled = ENABLED)
+@bot.command(name='gamba-delete', help='!gamba-delete', description='Delete a gamba', enabled = ENABLED)
 async def delete_gamba(ctx):
     await gamba_delete_helper(ctx, data)
 
-@bot.command(name='gamba-view', help='View current gamba', enabled = ENABLED)
+@bot.command(name='gamba-view', help='!gamba-view', description='View current gamba', enabled = ENABLED)
 async def view_gamba(ctx):
     await gamba_view_helper(ctx, data)
 
-@bot.command(name='gamba-yes', help='Bet on yes', enabled = ENABLED)
+@bot.command(name='gamba-yes', help='!gamba-yes <amount>', description='Bet on yes', enabled = ENABLED)
 async def gamba_yes(ctx, amount):
     await gamba_choice_helper(ctx, data, "yes", amount)
 
-@bot.command(name='gamba-no', help='Bet on no', enabled = ENABLED)
+@bot.command(name='gamba-no', help='!gamba-no <amount>', description='Bet on no', enabled = ENABLED)
 async def gamba_no(ctx, amount):
     await gamba_choice_helper(ctx, data, "no", amount)
 
-@bot.command(name='mygamba', help='View your gamba', enabled = ENABLED)
+@bot.command(name='mygamba', help='!mygamba', description='View your gamba', enabled = ENABLED)
 async def mygamba(ctx):
     await my_gamba_helper(ctx, data)
 
-@bot.command(name='gamba-end', help='End gamba', enabled = ENABLED)
+@bot.command(name='gamba-end', help='!gamba-end', description='End gamba', enabled = ENABLED)
 async def end_gamba(ctx, result):
     await gamba_end_helper(ctx, data, result)
 
 @commands.cooldown(1, 1, commands.BucketType.user)
-@bot.command(name='flip', aliases=['f', 'coin'], help='flip <amount> to bet on a coin. Default amount is 0.', enabled = ENABLED)
+@bot.command(name='flip', aliases=['f', 'coin'], help='!flip <amount>',description='flip <amount> to bet on a coin', enabled = ENABLED)
 async def flip(ctx, amount):
     await flip_helper(ctx, data["users"], amount)
 
-@bot.command(name='balance', aliases=['b'], help='Check your balance', enabled = ENABLED)
+@bot.command(name='balance', aliases=['b'], help='!balance <usr (optional)>', description='Check your balance', enabled = ENABLED)
 async def balance(ctx, usr: discord.Member = None):
     await balance_helper(ctx, data["users"], usr)
 
@@ -113,7 +113,7 @@ async def leaderboard(ctx):
     await leaderboard_helper(ctx, data["users"])
 
 @commands.cooldown(1, 60, commands.BucketType.user)
-@bot.command(name='battle', aliases=['fight'], help='battle <user> <amount> to battle another user. Default amount is 0.', enabled = ENABLED)
+@bot.command(name='battle', aliases=['fight'], help='!battle <user> <amount> to battle another user. Default amount is 0.', enabled = ENABLED)
 async def battle(ctx, opponent: discord.Member, amount: float = 0):
     await battle_helper(ctx, data["users"], opponent, amount, bot)
 
@@ -122,7 +122,7 @@ async def battle(ctx, opponent: discord.Member, amount: float = 0):
 async def steal(ctx):
     await steal_helper(ctx, data["users"])
 
-@bot.command(help='give <user> <amount> to give another user coins', enabled = ENABLED)
+@bot.command(help='!give <user> <amount> to give another user coins', enabled = ENABLED)
 async def give(ctx, user: discord.Member, amount: float):
     await give_helper(ctx, data["users"], user, amount)
 
