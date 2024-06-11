@@ -21,3 +21,4 @@ if __name__ == '__main__':
     # Example compressed base64 string
     input = input("Enter the compressed base64 string: ")
     pprint.pprint(decompress_json(input))
+
